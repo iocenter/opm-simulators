@@ -19,6 +19,17 @@ project(opm-simulators C CXX)
 
 cmake_minimum_required (VERSION 2.8)
 
+# Custom ERT/ECL -> Using Equinor's libecl (bleeding edge)
+set(EQUINOR_ECL_DIR ${HOME}/git/IOC/libecl)
+set(ecl_DIR "${EQUINOR_ECL_DIR}/cmake-build-debug")
+set(CMAKE_INSTALL_PREFIX "${EQUINOR_ECL_DIR}/cmake-build-debug/lib")
+
+set(USE_MPI OFF)
+message(STATUS "USE_MPI: ${USE_MPI}")
+
+cmake_policy(SET CMP0074 OLD)
+cmake_policy(SET CMP0054 OLD)
+
 option(SIBLING_SEARCH "Search for other modules in sibling directories?" ON)
 set( USE_OPENMP_DEFAULT OFF ) # Use of OpenMP is considered experimental
 option(BUILD_FLOW "Build the production oriented flow simulator?" ON)
@@ -69,6 +80,7 @@ include (OpmInit)
 # Look for the opm-tests repository; if found the variable
 # HAVE_OPM_TESTS will be set to true.
 include(Findopm-tests)
+message(STATUS HAVE_OPM_TESTS=${HAVE_OPM_TESTS})
 
 # list of prerequisites for this particular project; this is in a
 # separate file (in cmake/Modules sub-directory) because it is shared
@@ -263,3 +275,5 @@ if (BUILD_EBOS_EXTENSIONS)
   install(TARGETS ebos_thermal DESTINATION bin)
 endif()
 
+set(USE_MPI OFF)
+message(STATUS "USE_MPI: ${USE_MPI}")
